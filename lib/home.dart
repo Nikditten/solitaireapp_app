@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:solitaireapp/result_page.dart';
 import 'package:camera/camera.dart';
 
+// SOURCE: https://stackoverflow.com/a/50744481
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.cameras}) : super(key: key);
 
@@ -24,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    controller = CameraController(widget.cameras[0], ResolutionPreset.max);
+    controller = CameraController(widget.cameras[0], ResolutionPreset.low);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -51,8 +55,8 @@ class _HomePageState extends State<HomePage> {
             ),
             Center(
               child: Container(
-              width: MediaQuery. of(context). size. width - 20,
-              height: MediaQuery. of(context). size. height - 300,
+              width: kIsWeb ? MediaQuery.of(context).size.width/2 + 100 :  MediaQuery.of(context). size. width - 20,
+              height: MediaQuery.of(context). size. height - 300,
               child: CameraPreview(
                 controller,
               )
