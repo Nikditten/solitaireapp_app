@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:http_parser/http_parser.dart';
 
 import 'package:camera/camera.dart';
@@ -78,20 +79,29 @@ class _ResultPageState extends State<ResultPage> {
   }
 }
 
+//SOURCES:
+//  https://www.bezkoder.com/dart-base64-image/
+//  https://docs.flutter.dev/cookbook/networking/send-data
 
-//SOURCE: https://stackoverflow.com/a/51813960
 uploadFile(XFile inputFile) async {
+  final bytes = File(inputFile.path).readAsBytesSync();
+  String encodedImage = base64Encode(bytes);
 
-  var url = Uri.http('192.168.137.253:8000', '/analyze_image');
-  var request = http.MultipartRequest("POST", url);
-  request.headers.addAll({
-    'Content-Type': 'multipart/form-data',
-  });
-  request.files.add(http.MultipartFile.fromBytes(
-      'file', await inputFile.readAsBytes()));
+  print("Sender request");
+  final response = await http.post(
+    Uri.http('192.168.84.85:8000', '/analyze_image'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'image_string': encodedImage,
+    }),
+  );
+  print("Venter på response");
 
-  print("NU sender vi request");
-  var response = await request.send();
-  print(response.statusCode.toString() + " - " + response.reasonPhrase.toString());
-  print("NU har vi sendt request");
+  print(response.statusCode.toString() +
+      " - " +
+      response.reasonPhrase.toString());
+  print(response.body.toString());
+  print(response.headers.toString());
 }
