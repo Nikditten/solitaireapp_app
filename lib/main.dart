@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:solitaireapp/home.dart';
+import 'package:solitaireapp/View/home.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 
