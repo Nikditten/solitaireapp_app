@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:solitaireapp/View/ViewUtil/board_of_cards.dart';
 import 'package:solitaireapp/View/result_page.dart';
 import 'package:solitaireapp/View/settings.dart';
 
@@ -25,13 +26,17 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    controller = CameraController(widget.cameras[0], ResolutionPreset.low);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
+    if (widget.cameras.isEmpty) {
+      print('No camera available');
+    } else {
+      controller = CameraController(widget.cameras.first, ResolutionPreset.low);
+      controller.initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -50,61 +55,71 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            DropdownButton(
-              value: widget.cameras.isNotEmpty ? widget.cameras[0] : null,
-              items: widget.cameras.map((CameraDescription camera) {
-                return DropdownMenuItem<CameraDescription>(
-                  value: camera,
-                  child: Text(
-                    camera.lensDirection == CameraLensDirection.front
-                        ? 'Frontkamera'
-                        : 'Bagkamera',
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  controller = CameraController(
-                    widget.cameras.firstWhere(
-                      (CameraDescription camera) => camera == value,
-                    ),
-                    ResolutionPreset.low,
-                  );
-                  controller.initialize().then((_) {
-                    if (!mounted) {
-                      return;
-                    }
-                    setState(() {});
-                  });
-                }
-              },
-            ),
-            Center(
-              child: SizedBox(
-                  width: kIsWeb
-                      ? MediaQuery.of(context).size.width / 2 + 100
-                      : MediaQuery.of(context).size.width - 20,
-                  height: MediaQuery.of(context).size.height - 300,
-                  child: CameraPreview(
-                    controller,
-                  )),
-            ),
+            widget.cameras.isNotEmpty
+                ? DropdownButton(
+                    value:
+                        widget.cameras.isNotEmpty ? widget.cameras.first : null,
+                    items: widget.cameras.map((CameraDescription camera) {
+                      return DropdownMenuItem<CameraDescription>(
+                        value: camera,
+                        child: Text(
+                          camera.lensDirection == CameraLensDirection.front
+                              ? 'Frontkamera'
+                              : 'Bagkamera',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller = CameraController(
+                          widget.cameras.firstWhere(
+                            (CameraDescription camera) => camera == value,
+                          ),
+                          ResolutionPreset.low,
+                        );
+                        controller.initialize().then((_) {
+                          if (!mounted) {
+                            return;
+                          }
+                          setState(() {});
+                        });
+                      }
+                    },
+                  )
+                : Container(),
+            widget.cameras.isNotEmpty
+                ? Center(
+                    child: SizedBox(
+                        width: kIsWeb
+                            ? MediaQuery.of(context).size.width / 2 + 100
+                            : MediaQuery.of(context).size.width - 20,
+                        height: MediaQuery.of(context).size.height - 300,
+                        child: CameraPreview(
+                          controller,
+                        )),
+                  )
+                : Container(),
             Container(
               width: 200,
               margin: const EdgeInsets.all(20),
               child: ElevatedButton(
                 onPressed: () {
-                  controller.takePicture().then((file) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ResultPage(file: file),
-                      ),
-                    );
-                  });
+                  if (widget.cameras.isNotEmpty) {
+                    controller.takePicture().then((file) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResultPage(file: file),
+                        ),
+                      );
+                    });
+                  } else {
+                    return;
+                  }
                 },
                 onLongPress: () {
-                  Navigator.push(context, 
+                  Navigator.push(
+                    context,
                     MaterialPageRoute(
                       builder: (context) => const SettingsView(),
                     ),
