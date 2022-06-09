@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:solitaireapp/Helper/apihelper.dart';
+import 'package:solitaireapp/Model/Instructions.dart';
 
 class ResultPage extends StatefulWidget {
   const ResultPage({Key? key, required this.file}) : super(key: key);
@@ -14,13 +15,21 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPageState extends State<ResultPage> {
-
   static APIHelper api = APIHelper();
+
+
+  late String moveFrom;
+  late String moveCard;
+  late String moveTo;
 
   @override
   void initState() {
     super.initState();
-    api.analyzeImage(widget.file);
+    api.analyzeImage(widget.file).then((value) {
+      moveFrom = value.moveFrom;
+      moveCard = value.moveCard;
+      moveTo = value.moveTo;
+    });
   }
 
   @override
@@ -43,7 +52,9 @@ class _ResultPageState extends State<ResultPage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width - 20,
                 height: MediaQuery.of(context).size.height - 400,
-                child: kIsWeb ? Image.network(widget.file.path) : Image.asset(widget.file.path),
+                child: kIsWeb
+                    ? Image.network(widget.file.path)
+                    : Image.asset(widget.file.path),
               ),
             ),
             Container(
@@ -63,9 +74,9 @@ class _ResultPageState extends State<ResultPage> {
             Container(
               width: 300,
               margin: const EdgeInsets.all(25),
-              child: const Text(
-                "Ryk kortet i venstre side over på kortet i højre side",
-                style: TextStyle(
+              child: Text(
+                "Flyt $moveCard fra $moveFrom til $moveTo",
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                 ),
@@ -77,5 +88,3 @@ class _ResultPageState extends State<ResultPage> {
     );
   }
 }
-
-
