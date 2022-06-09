@@ -2,8 +2,8 @@
 // SOURCE:
 // https://docs.flutter.dev/cookbook/networking/background-parsing
 class Instructions {
-  final String moveFrom;
-  final String moveTo;
+  final int moveFrom;
+  final int moveTo;
   final String moveCard;
 
   const Instructions({
@@ -14,8 +14,8 @@ class Instructions {
 
   factory Instructions.fromJson(Map<String, dynamic> json) {
     return Instructions(
-      moveFrom: json['next_move']['move_from'] as String,
-      moveTo: json['next_move']['move_to'] as String,
+      moveFrom: json['next_move']['move_from'] as int,
+      moveTo: json['next_move']['move_to'] as int,
       moveCard: json['next_move']['move_card'] as String
     );
   }

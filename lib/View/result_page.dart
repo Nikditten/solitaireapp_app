@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:solitaireapp/Helper/Web/apihelperweb.dart';
 import 'package:solitaireapp/Helper/apihelper.dart';
-import 'package:solitaireapp/Model/Instructions.dart';
 
 class ResultPage extends StatefulWidget {
   const ResultPage({Key? key, required this.file}) : super(key: key);
@@ -16,20 +16,32 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   static APIHelper api = APIHelper();
+  static APIHelperWeb api_web = APIHelperWeb();
 
-
-  late String moveFrom;
-  late String moveCard;
-  late String moveTo;
+  int moveFrom = -1;
+  String moveCard = "";
+  int moveTo = -1;
 
   @override
   void initState() {
     super.initState();
-    api.analyzeImage(widget.file).then((value) {
-      moveFrom = value.moveFrom;
-      moveCard = value.moveCard;
-      moveTo = value.moveTo;
-    });
+    if (kIsWeb) {
+      api_web.analyzeImage(widget.file).then((response) {
+        setState(() {
+          moveFrom = response.moveFrom;
+          moveCard = response.moveCard;
+          moveTo = response.moveTo;
+        });
+      });
+    } else {
+      api.analyzeImage(widget.file).then((response) {
+        setState(() {
+          moveFrom = response.moveFrom;
+          moveCard = response.moveCard;
+          moveTo = response.moveTo;
+        });
+      });
+    }
   }
 
   @override
@@ -57,6 +69,23 @@ class _ResultPageState extends State<ResultPage> {
                     : Image.asset(widget.file.path),
               ),
             ),
+            moveCard != ""
+                ? Center(
+                    child: Container(
+                      width: 300,
+                      margin: const EdgeInsets.all(20),
+                      child: Text(
+                        moveCard.isNotEmpty && moveFrom != -1 && moveTo != -1
+                            ? "Flyt '$moveCard' fra kolonne $moveFrom til kolonne $moveTo"
+                            : "Fejl efter api response",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  )
+                : const CircularProgressIndicator(),
             Container(
               width: 200,
               margin: const EdgeInsets.all(20),
@@ -68,17 +97,6 @@ class _ResultPageState extends State<ResultPage> {
                 style: ButtonStyle(
                   // SOURCE: https://stackoverflow.com/questions/66835173/how-to-change-background-color-of-elevated-button-in-flutter-from-function
                   backgroundColor: MaterialStateProperty.all(Colors.red),
-                ),
-              ),
-            ),
-            Container(
-              width: 300,
-              margin: const EdgeInsets.all(25),
-              child: Text(
-                "Flyt $moveCard fra $moveFrom til $moveTo",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal,
                 ),
               ),
             ),

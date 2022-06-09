@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solitaireapp/Model/Instructions.dart';
 
-class APIHelper {
+class APIHelperWeb {
   //SOURCES:
   //  https://www.bezkoder.com/dart-base64-image/
   //  https://docs.flutter.dev/cookbook/networking/send-data
@@ -20,7 +19,7 @@ class APIHelper {
 
     print("URL: " + apiURL);
 
-    final bytes = File(inputFile.path).readAsBytesSync();
+    final bytes = await inputFile.readAsBytes();
 
     String encodedImage = base64Encode(bytes);
 
