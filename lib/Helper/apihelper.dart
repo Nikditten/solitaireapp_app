@@ -42,8 +42,18 @@ class APIHelper {
       final jsonResponse = json.decode(response.body);
       final instructions = Instructions.fromJson(jsonResponse);
       return instructions;
+    } else if (response.statusCode == 400) {
+      throw Exception("400 - Bad request");
+    } else if (response.statusCode == 401) {
+      throw Exception("401 - Unauthorized");
+    } else if (response.statusCode == 403) {
+      throw Exception("403 - Forbidden");
+    } else if (response.statusCode == 404) {
+      throw Exception("404 - Not found");
+    } else if (response.statusCode == 500) {
+      throw Exception("500 - Internal server error");
     } else {
-      throw Exception('Failed to load instructions');
+      throw Exception("Unknown error");
     }
   }
 }
