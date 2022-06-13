@@ -9,14 +9,14 @@ class APIHelper {
   //SOURCES:
   //  https://www.bezkoder.com/dart-base64-image/
   //  https://docs.flutter.dev/cookbook/networking/send-data
-  // https://docs.flutter.dev/cookbook/networking/background-parsing
+  //  https://docs.flutter.dev/cookbook/networking/background-parsing
 
-  Future<Instructions> analyzeImage(XFile inputFile) async {
+  Future<List<Instructions>> analyzeImage(XFile inputFile) async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
     final SharedPreferences prefs = await _prefs;
 
-    var apiURL = prefs.getString("apiURL") ?? "127.0.0.0:8000";
+    var apiURL = prefs.getString("apiURL") ?? "0.0.0.0:8000";
 
     print("URL: " + apiURL);
 
@@ -39,9 +39,12 @@ class APIHelper {
     print(response.body);
 
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      final instructions = Instructions.fromJson(jsonResponse);
-      return instructions;
+      // SOURCE
+      // https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm#
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      return parsed
+          .map<Instructions>((json) => Instructions.fromJson(json))
+          .toList();
     } else if (response.statusCode == 400) {
       throw Exception("400 - Bad request");
     } else if (response.statusCode == 401) {
