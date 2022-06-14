@@ -42,8 +42,19 @@ class _ResultPageState extends State<ResultPage> {
                   : api.analyzeImage(widget.file),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('An error has occurred!'),
+                  print(snapshot.error.toString());
+                  return Center(
+                    child: Column(
+                      children: [
+                        const Text(
+                          'An error has occurred!',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(snapshot.error.toString()),
+                      ],
+                    ),
                   );
                 } else if (snapshot.hasData) {
                   return SizedBox(

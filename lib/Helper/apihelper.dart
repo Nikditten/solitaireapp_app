@@ -34,11 +34,7 @@ class APIHelper {
       }),
     );
 
-    print(response.statusCode);
-
-    print(response.body);
-
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && response.body != "null") {
       // SOURCE
       // https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm#
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -46,17 +42,41 @@ class APIHelper {
           .map<Instructions>((json) => Instructions.fromJson(json))
           .toList();
     } else if (response.statusCode == 400) {
-      throw Exception("400 - Bad request");
+      return Future.error(response.statusCode.toString() +
+          " - " +
+          response.reasonPhrase.toString() +
+          " //Body: " +
+          response.body);
     } else if (response.statusCode == 401) {
-      throw Exception("401 - Unauthorized");
+      return Future.error(response.statusCode.toString() +
+          " - " +
+          response.reasonPhrase.toString() +
+          " //Body: " +
+          response.body);
     } else if (response.statusCode == 403) {
-      throw Exception("403 - Forbidden");
+      return Future.error(response.statusCode.toString() +
+          " - " +
+          response.reasonPhrase.toString() +
+          " //Body: " +
+          response.body);
     } else if (response.statusCode == 404) {
-      throw Exception("404 - Not found");
+      return Future.error(response.statusCode.toString() +
+          " - " +
+          response.reasonPhrase.toString() +
+          " //Body: " +
+          response.body);
     } else if (response.statusCode == 500) {
-      throw Exception("500 - Internal server error");
+      return Future.error(response.statusCode.toString() +
+          " - " +
+          response.reasonPhrase.toString() +
+          " //Body: " +
+          response.body);
+    } else if (response.body == "null" || response.body.isEmpty) {
+      return Future.error(response.statusCode.toString() +
+          " - Empty response\n\nBody:\n" +
+          response.body);
     } else {
-      throw Exception("Unknown error");
+      return Future.error("Unknown error");
     }
   }
 }

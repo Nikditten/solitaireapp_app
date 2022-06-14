@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     if (widget.cameras.isEmpty) {
       print('No camera available');
     } else {
-      controller = CameraController(widget.cameras.first, ResolutionPreset.low,
+      controller = CameraController(widget.cameras.first, ResolutionPreset.max,
           imageFormatGroup: ImageFormatGroup.bgra8888);
       controller.initialize().then((_) {
         if (!mounted) {
@@ -58,8 +58,8 @@ class _HomePageState extends State<HomePage> {
                 )
               : Container(),
           SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width / 3,
+            height: MediaQuery.of(context).size.height / 2,
             child: Center(
                 child: SafeArea(
               child: Column(
