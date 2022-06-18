@@ -37,6 +37,7 @@ class APIHelper {
     if (response.statusCode == 200 && response.body != "null") {
       // SOURCE
       // https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm#
+      // https://stackoverflow.com/questions/54474689/how-do-i-return-error-from-a-future-in-dart
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       return parsed
           .map<Instructions>((json) => Instructions.fromJson(json))

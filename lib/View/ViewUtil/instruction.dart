@@ -4,8 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:solitaireapp/Model/Instructions.dart';
 
 class InstructionView extends StatefulWidget {
-  const InstructionView(
-      {Key? key, required this.instruction})
+  const InstructionView({Key? key, required this.instruction})
       : super(key: key);
 
   final Instructions instruction;
@@ -15,16 +14,26 @@ class InstructionView extends StatefulWidget {
 }
 
 class _InstructionViewState extends State<InstructionView> {
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        setState(() {
+          widget.instruction.done = !widget.instruction.done;
+        });
+      },
       child: Container(
         width: MediaQuery.of(context).size.width - 100,
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: widget.instruction.getTalon ? Colors.orange[100] : Colors.white,
+          color: widget.instruction.gameOver
+              ? Colors.red
+              : widget.instruction.done
+                  ? Colors.green
+                  : widget.instruction.getTalon
+                      ? Colors.orange[100]
+                      : Colors.white,
           // SOURCE:
           // https://stackoverflow.com/questions/52227846/how-can-i-add-shadow-to-the-widget-in-flutter
           // LINK TO ANSWER: https://stackoverflow.com/a/52228086
@@ -44,38 +53,59 @@ class _InstructionViewState extends State<InstructionView> {
         ),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Flyt kort: " + widget.instruction.moveCard,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Fra kolonne " +
-                      widget.instruction.moveFrom +
-                      " til kolonne " +
-                      widget.instruction.moveTo,
-                  style: const TextStyle(fontSize: 15, color: Colors.black,),
+                  "Flyt kort: " + widget.instruction.moveCard,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: widget.instruction.gameOver
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                 ),
                 Text(
-                  "Talon: " + (widget.instruction.getTalon ? "Ja" : "Nej"),
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
+                  widget.instruction.regCard,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: widget.instruction.gameOver
+                          ? Colors.white
+                          : Colors.blue),
                 ),
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Fra kolonne " +
+                    widget.instruction.moveFrom +
+                    " til kolonne " +
+                    widget.instruction.moveTo,
+                style: TextStyle(
+                    fontSize: 15,
+                    color: widget.instruction.gameOver
+                        ? Colors.white
+                        : Colors.black),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            widget.instruction.gameOver
+                ? const Text(
+                    "GAME OVER",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )
+                : Container(),
           ],
         ),
       ),
