@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +22,13 @@ class APIHelper {
 
     print("URL: " + apiURL);
 
-    final bytes = File(inputFile.path).readAsBytesSync();
+    Uint8List bytes;
+
+    if (kIsWeb) {
+      bytes = await inputFile.readAsBytes();
+    } else {
+      bytes = File(inputFile.path).readAsBytesSync();
+    }
 
     String encodedImage = base64Encode(bytes);
 

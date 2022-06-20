@@ -8,6 +8,7 @@ List<CameraDescription> cameras = [];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Get available cameras.
   cameras = await availableCameras();
   runApp(const MyApp());
 }
@@ -15,7 +16,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  // Application root
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

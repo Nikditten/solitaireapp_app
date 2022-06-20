@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:solitaireapp/Helper/Web/apihelperweb.dart';
 import 'package:solitaireapp/Helper/apihelper.dart';
 import 'package:solitaireapp/Model/Instructions.dart';
 import 'package:solitaireapp/View/ViewUtil/instruction.dart';
@@ -18,7 +15,6 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   static APIHelper api = APIHelper();
-  static APIHelperWeb api_web = APIHelperWeb();
 
   bool gameOver = false;
 
@@ -39,9 +35,7 @@ class _ResultPageState extends State<ResultPage> {
                 ),
               ),
               FutureBuilder<List<Instructions>>(
-                future: kIsWeb
-                    ? api_web.analyzeImage(widget.file)
-                    : api.analyzeImage(widget.file),
+                future: api.analyzeImage(widget.file),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print(snapshot.error.toString());

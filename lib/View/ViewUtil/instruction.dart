@@ -1,6 +1,6 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:solitaireapp/Model/Instructions.dart';
 
 class InstructionView extends StatefulWidget {
@@ -57,7 +57,9 @@ class _InstructionViewState extends State<InstructionView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Flyt kort: " + widget.instruction.moveCard,
+                  widget.instruction.getTalon
+                      ? "Træk 3 kort fra talon"
+                      : "Flyt kort: " + widget.instruction.moveCard,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -83,10 +85,16 @@ class _InstructionViewState extends State<InstructionView> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Fra kolonne " +
-                    widget.instruction.moveFrom +
-                    " til kolonne " +
-                    widget.instruction.moveTo,
+                !widget.instruction.getTalon
+                    ? !(int.parse(widget.instruction.moveTo) > 6) ? "Fra kolonne " +
+                        (int.parse(widget.instruction.moveFrom) + 1)
+                            .toString() +
+                        " til kolonne " +
+                        (int.parse(widget.instruction.moveTo) + 1).toString() : "Fra kolonne " +
+                        (int.parse(widget.instruction.moveFrom) + 1)
+                            .toString() +
+                        " til foundation"
+                    : widget.instruction.moveCard.isNotEmpty ? "Det øverste kort bør være " + widget.instruction.moveCard : "",
                 style: TextStyle(
                     fontSize: 15,
                     color: widget.instruction.gameOver
@@ -94,9 +102,9 @@ class _InstructionViewState extends State<InstructionView> {
                         : Colors.black),
               ),
             ),
-            const SizedBox(
+            widget.instruction.gameOver ? const SizedBox(
               height: 20,
-            ),
+            ) : Container(),
             widget.instruction.gameOver
                 ? const Text(
                     "GAME OVER",
