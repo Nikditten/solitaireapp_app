@@ -1,13 +1,14 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:solitaireapp/View/ViewUtil/board_of_cards.dart';
 import 'package:solitaireapp/View/result_page.dart';
 import 'package:solitaireapp/View/settings.dart';
 
+// Everything that has to do with the camera is based on this source:
+// https://pub.dev/packages/camera
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.cameras}) : super(key: key);
-
+  // This view takes a list of all available cameras.
   final List<CameraDescription> cameras;
 
   @override
@@ -19,24 +20,34 @@ class _HomePageState extends State<HomePage> {
 
   bool showCameras = false;
 
+  // SOURCE: https://pub.dev/packages/camera
   @override
   void dispose() {
+    // Delete the controller
     controller.dispose();
     super.dispose();
   }
 
+  // SOURCE: https://pub.dev/packages/camera
   @override
   void initState() {
     super.initState();
+    // Init camera controller
+    // Check if any cameras available
     if (widget.cameras.isEmpty) {
       print('No camera available');
     } else {
+      // Get the first available camera (Often the camera on the back of the phone)
+      // Set resolution to max
+      // iPhone has the bgra8888 image format
       controller = CameraController(widget.cameras.first, ResolutionPreset.max,
           imageFormatGroup: ImageFormatGroup.bgra8888);
       controller.initialize().then((_) {
         if (!mounted) {
+          // Uf the controller couldn't be initialize do nothing.
           return;
         }
+        // Tell the ui to update
         setState(() {});
       });
     }
@@ -47,6 +58,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
+          // Show camera preview
+          // Only if there are any camera available
           widget.cameras.isNotEmpty
               ? Center(
                   child: SizedBox(
@@ -64,6 +77,8 @@ class _HomePageState extends State<HomePage> {
                 child: SafeArea(
               child: Column(
                 children: <Widget>[
+                  // For debug purposes implement a dropdown
+                  // to select which camera to use
                   widget.cameras.isNotEmpty && showCameras
                       // SOURCE:
                       // https://www.geeksforgeeks.org/flutter-dropdownbutton-widget/
@@ -82,13 +97,14 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           }).toList(),
+                          // Update to new camera, if user selects a new camera to use
                           onChanged: (value) {
                             if (value != null) {
                               controller = CameraController(
                                 widget.cameras.firstWhere(
                                   (CameraDescription camera) => camera == value,
                                 ),
-                                ResolutionPreset.low,
+                                ResolutionPreset.max,
                               );
                               controller.initialize().then((_) {
                                 if (!mounted) {
@@ -106,6 +122,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      // For debug purposes you can manually enter the IP-address of the API
+      // In order to use multiple tap gestures, we are using an InkWell widget.
       floatingActionButton: InkWell(
         splashColor: Colors.blue,
         onLongPress: () {
@@ -118,6 +136,7 @@ class _HomePageState extends State<HomePage> {
         },
         onDoubleTap: () {
           setState(() {
+            // Show camera dropdown, if FAB is double tapped
             showCameras = !showCameras;
           });
         },
@@ -128,6 +147,8 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    // When an image is captured give it to the ResultPage view
+                    // And send the user to that view.
                     builder: (context) => ResultPage(file: file),
                   ),
                 );

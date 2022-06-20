@@ -3,8 +3,11 @@
 class Instructions {
   final String moveFrom, moveTo, moveCard, regCard;
   final bool getTalon, gameOver;
+  // Used so the user can mark the instruction as completed
+  // It has nothing to do with the API
   bool done;
 
+  // Constructor
   Instructions(
       {required this.moveFrom,
       required this.moveTo,
@@ -14,6 +17,8 @@ class Instructions {
       required this.gameOver,
       required this.regCard});
 
+  // Convert from json to Insrtuction objects
+  // By turning json into a map with types string and dynamic
   factory Instructions.fromJson(Map<String, dynamic> json) {
     return Instructions(
         moveFrom: json['move_from'] as String,

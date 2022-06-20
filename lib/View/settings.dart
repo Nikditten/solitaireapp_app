@@ -8,25 +8,32 @@ class SettingsView extends StatefulWidget {
   State<SettingsView> createState() => _SettingsViewState();
 }
 
-class _SettingsViewState extends State<SettingsView> {
+// THIS FILE IS ONLY USED FOR EASIER DEBUGGING
 
+class _SettingsViewState extends State<SettingsView> {
+  // Controller to control the TextField widget
   TextEditingController apiurlController = TextEditingController();
 
   //SOURCE:
   // https://pub.dev/packages/shared_preferences/example
+  // Get shared preferences
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  // Svae the new api ip-address to shared preference
   void updateApiURL(String url) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString("apiURL", url);
   }
 
+  // Get the api ip-address saved in shared preferences
   void getApiUrl() async {
     final SharedPreferences prefs = await _prefs;
     var url = prefs.getString("apiURL") ?? "";
+    // Set TextField widget value to the ip-address saved in shared preferences
     apiurlController.text = url;
   }
 
+  // Get api ip-address when view is build
   @override
   void initState() {
     super.initState();
@@ -39,6 +46,7 @@ class _SettingsViewState extends State<SettingsView> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            // Add title
             Container(
               margin: const EdgeInsets.only(top: 25, bottom: 10),
               child: const Text(
@@ -49,6 +57,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
             ),
+            // Add TextField
             Container(
               margin: const EdgeInsets.all(20),
               child: TextField(
@@ -60,10 +69,12 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
             ),
+            // Add Save button
             Container(
               margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: ElevatedButton(
                 onPressed: () {
+                  // Save ip-address and go back to camera view
                   updateApiURL(apiurlController.text);
                   Navigator.pop(context);
                 },
