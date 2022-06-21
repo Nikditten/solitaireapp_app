@@ -8,7 +8,7 @@ class SettingsView extends StatefulWidget {
   State<SettingsView> createState() => _SettingsViewState();
 }
 
-// THIS FILE IS ONLY USED FOR EASIER DEBUGGING
+// THIS FILE IS ONLY USED FOR DEBUGGING
 
 class _SettingsViewState extends State<SettingsView> {
   // Controller to control the TextField widget
@@ -19,7 +19,7 @@ class _SettingsViewState extends State<SettingsView> {
   // Get shared preferences
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  // Svae the new api ip-address to shared preference
+  // Save the new api ip-address to shared preference
   void updateApiURL(String url) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString("apiURL", url);
