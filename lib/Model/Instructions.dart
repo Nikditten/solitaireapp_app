@@ -1,5 +1,4 @@
-// SOURCE:
-// https://docs.flutter.dev/cookbook/networking/background-parsing
+
 class Instructions {
   final String moveFrom, moveTo, moveCard, regCard;
   final bool getTalon, gameOver;
@@ -17,8 +16,10 @@ class Instructions {
       required this.gameOver,
       required this.regCard});
 
-  // Convert from json to Insrtuction objects
-  // By turning json into a map with types string and dynamic
+  // SOURCE:
+  // https://docs.flutter.dev/cookbook/networking/background-parsing
+  // Convert from json to Instruction objects
+  // By turning json into a map (dictionary) with types string and dynamic
   factory Instructions.fromJson(Map<String, dynamic> json) {
     return Instructions(
         moveFrom: json['move_from'] as String,
