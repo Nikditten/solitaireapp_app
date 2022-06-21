@@ -70,9 +70,11 @@ class _InstructionViewState extends State<InstructionView> {
               children: [
                 Text(
                   // Change text based on instruction
-                  widget.instruction.getTalon
-                      ? "Træk 3 kort fra talon"
-                      : "Flyt kort: " + widget.instruction.moveCard,
+                  widget.instruction.moveCard == "No cards found"
+                      ? "Der blev ikke fundet nogle kort"
+                      : widget.instruction.getTalon
+                          ? "Træk 3 kort fra talon"
+                          : "Flyt kort: " + widget.instruction.moveCard,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -82,7 +84,9 @@ class _InstructionViewState extends State<InstructionView> {
                   ),
                 ),
                 Text(
-                  widget.instruction.regCard,
+                  widget.instruction.regCard.isNotEmpty
+                      ? widget.instruction.regCard
+                      : "",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -100,17 +104,21 @@ class _InstructionViewState extends State<InstructionView> {
               child: Text(
                 // Text based on instruction
                 !widget.instruction.getTalon
-                    ? !(int.parse(widget.instruction.moveTo) > 6)
-                        ? "Fra kolonne " +
-                            (int.parse(widget.instruction.moveFrom) + 1)
-                                .toString() +
-                            " til kolonne " +
-                            (int.parse(widget.instruction.moveTo) + 1)
-                                .toString()
-                        : "Fra kolonne " +
-                            (int.parse(widget.instruction.moveFrom) + 1)
-                                .toString() +
-                            " til foundation"
+                    ? widget.instruction.moveFrom.isNotEmpty &&
+                            widget.instruction.moveTo.isNotEmpty &&
+                            widget.instruction.moveCard.isNotEmpty
+                        ? !(int.parse(widget.instruction.moveTo) > 6)
+                            ? "Fra kolonne " +
+                                (int.parse(widget.instruction.moveFrom) + 1)
+                                    .toString() +
+                                " til kolonne " +
+                                (int.parse(widget.instruction.moveTo) + 1)
+                                    .toString()
+                            : "Fra kolonne " +
+                                (int.parse(widget.instruction.moveFrom) + 1)
+                                    .toString() +
+                                " til foundation"
+                        : ""
                     : widget.instruction.moveCard.isNotEmpty
                         ? "Det øverste kort bør være " +
                             widget.instruction.moveCard
