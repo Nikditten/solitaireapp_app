@@ -14,7 +14,8 @@ class Instructions {
       required this.getTalon,
       required this.done,
       required this.gameOver,
-      required this.regCard});
+      required this.regCard
+  });
 
   // SOURCE:
   // https://docs.flutter.dev/cookbook/networking/background-parsing
