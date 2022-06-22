@@ -8,8 +8,6 @@ class SettingsView extends StatefulWidget {
   State<SettingsView> createState() => _SettingsViewState();
 }
 
-// THIS FILE IS ONLY USED FOR DEBUGGING
-
 class _SettingsViewState extends State<SettingsView> {
   // Controller to control the TextField widget
   TextEditingController apiurlController = TextEditingController();

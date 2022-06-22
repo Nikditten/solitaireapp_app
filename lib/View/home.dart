@@ -122,7 +122,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      // For debug purposes you can manually enter the IP-address of the API
       // In order to use multiple tap gestures, we are using an InkWell widget.
       floatingActionButton: InkWell(
         splashColor: Colors.blue,
