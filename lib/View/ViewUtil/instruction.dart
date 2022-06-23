@@ -17,7 +17,7 @@ class _InstructionViewState extends State<InstructionView> {
   Widget build(BuildContext context) {
     return GestureDetector(
       // Mark as completed if the user taps on the instruction
-      // Unmark if the user it again afterwards
+      // Unmark if the user taps it again afterwards
       onTap: () {
         setState(() {
           widget.instruction.done = !widget.instruction.done;
