@@ -1,3 +1,4 @@
+# Alt udarbejdet kode er placeret i 'lib' mappen
 # Kør app'en
 - Denne app kan startes i en chrome browser eller som app på IOS og Android
 - Installér flutter
